@@ -17,13 +17,18 @@ const Quote = () => {
         const response = await axios.get(
           "https://api.quotable.io/random?maxLength=100"
         );
-        console.log(response);
         userDispatch({ type: "SET_QUOTE", payload: response.data.content });
         userDispatch({
           type: "SET_QUOTE_AUTHOR",
           payload: response.data.author,
         });
-      } catch (e) {}
+      } catch (e) {
+        userDispatch({ type: "SET_QUOTE", payload: null });
+        userDispatch({
+          type: "SET_QUOTE_AUTHOR",
+          payload: null,
+        });
+      }
     })();
   }, []);
 
@@ -33,7 +38,7 @@ const Quote = () => {
         sx={{
           display: "flex",
           flexDirection: "column",
-         alignItems:"center"
+          alignItems: "center",
         }}
       >
         <Typography variant="h5" component="h5">

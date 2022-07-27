@@ -2,14 +2,14 @@ import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 
 import "./App.css";
-import { NewUserName, Quote, UserWelcome } from "./components";
+import { NewUserName, Quote, UserWelcome, Weather } from "./components";
 import { useUser } from "./contexts";
-
 
 function App() {
   const {
     userState: { isNameSaved },
   } = useUser();
+
 
   return (
     <>
@@ -31,6 +31,10 @@ function App() {
         <Box sx={{ mt: 40 }}>
           <Quote />
         </Box>
+      </Box>
+
+      <Box sx={{ position: "absolute", top: 0, right: 0, mr: 4 }}>
+        <Weather />
       </Box>
     </>
   );
