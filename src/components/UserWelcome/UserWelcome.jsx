@@ -5,11 +5,11 @@ import moment from "moment";
 import { Edit } from "@mui/icons-material";
 
 import { useUser } from "../../contexts";
-import { CssTextField } from "../";
+import { CssTextField, MainFocus } from "../";
 
 const UserWelcome = () => {
   const {
-    userState: { name, showEditIcon, showNameField },
+    userState: { name, showNameEditIcon, showNameField },
     userDispatch,
   } = useUser();
 
@@ -39,10 +39,10 @@ const UserWelcome = () => {
         <Box
           sx={{ display: "flex", alignItems: "center" }}
           onMouseOver={() =>
-            userDispatch({ type: "SHOW_EDIT_ICON", payload: true })
+            userDispatch({ type: "SHOW_NAME_EDIT_ICON", payload: true })
           }
           onMouseOut={() =>
-            userDispatch({ type: "SHOW_EDIT_ICON", payload: false })
+            userDispatch({ type: "SHOW_NAME_EDIT_ICON", payload: false })
           }
         >
           {!showNameField && (
@@ -55,12 +55,12 @@ const UserWelcome = () => {
             </Typography>
           )}
 
-          {showEditIcon && (
+          {showNameEditIcon && (
             <Edit
               sx={{ cursor: "pointer", fontSize: 50 }}
               onClick={() => {
                 userDispatch({
-                  type: "SHOW_EDIT_ICON",
+                  type: "SHOW_NAME_EDIT_ICON",
                   payload: false,
                 });
                 userDispatch({
@@ -90,7 +90,7 @@ const UserWelcome = () => {
             }
             onKeyDown={e => {
               if (e.key === "Enter") {
-                userDispatch({ type: "SHOW_EDIT_ICON", payload: false });
+                userDispatch({ type: "SHOW_NAME_EDIT_ICON", payload: false });
                 userDispatch({ type: "SHOW_NAME_FIELD", payload: false });
                 localStorage.setItem("name", name);
               }
@@ -98,6 +98,8 @@ const UserWelcome = () => {
           />
         )}
       </Box>
+
+      <MainFocus />
     </Box>
   );
 };
