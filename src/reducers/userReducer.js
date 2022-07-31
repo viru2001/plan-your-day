@@ -7,6 +7,9 @@ const userInitialState = {
   showNameEditIcon: false,
   showNameField: false,
   showFocusIcons: false,
+  quote: "",
+  quoteAuthor: "",
+  weather: {},
 };
 
 const userReducer = (state, { type, payload }) => {
@@ -29,6 +32,12 @@ const userReducer = (state, { type, payload }) => {
       return { ...state, showFocusIcons: payload };
     case "DELETE_FOCUS":
       return { ...state, focus: "" };
+    case "SET_QUOTE":
+      return { ...state, quote: payload };
+    case "SET_QUOTE_AUTHOR":
+      return { ...state, quoteAuthor: payload };
+    case "UPDATE_WEATHER":
+      return { ...state, weather: payload };
     default:
       return state;
   }
