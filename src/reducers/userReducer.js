@@ -48,6 +48,11 @@ const userReducer = (state, { type, payload }) => {
           index === payload ? { ...todo, isDone: !todo.isDone } : todo
         ),
       };
+    case "DELETE_TODO":
+      return {
+        ...state,
+        todos: state.todos.filter(todo => todo.title !== payload),
+      };
     default:
       return state;
   }

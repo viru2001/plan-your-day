@@ -65,7 +65,7 @@ const TodoList = () => {
                       tabIndex={-1}
                       disableRipple
                       inputProps={{ "aria-labelledby": labelId }}
-                      onChange={isDone => {
+                      onChange={() => {
                         const indexToUpdate = todos.findIndex(
                           todo => todo.title === title
                         );
@@ -121,6 +121,15 @@ const TodoList = () => {
                     edge="end"
                     aria-label="delete"
                     sx={{ color: "text.primary" }}
+                    onClick={() => {
+                      userDispatch({ type: "DELETE_TODO", payload: title });
+                      localStorage.setItem(
+                        "todos",
+                        JSON.stringify(
+                          todos.filter(todo => todo.title !== title)
+                        )
+                      );
+                    }}
                   >
                     <Icon>delete</Icon>
                   </IconButton>
