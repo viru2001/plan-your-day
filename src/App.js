@@ -2,8 +2,13 @@ import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import Typography from "@mui/material/Typography";
 
-import "./App.css";
-import { NewUserName, Quote, UserWelcome, Weather } from "./components";
+import {
+  NewUserName,
+  Quote,
+  TodoButton,
+  UserWelcome,
+  Weather,
+} from "./components";
 import { useUser } from "./contexts";
 
 import axios from "axios";
@@ -63,6 +68,10 @@ function App() {
 
       <Box sx={{ position: "absolute", left: 0, top: 0, ml: 2, p: 2 }}>
         <Typography variant="body1">{photoCredit}</Typography>
+      </Box>
+
+      <Box>
+        <TodoButton />
       </Box>
     </>
   );
