@@ -11,66 +11,112 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Icon from "@mui/material/Icon";
 import Typography from "@mui/material/Typography";
+import uuid from "react-uuid";
 
 import { useUser } from "../../contexts";
 
 const TodoList = () => {
-  const [checked, setChecked] = useState([0]);
-
-  const handleToggle = value => () => {
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
-
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
-    setChecked(newChecked);
-  };
-
-  // const [showTextField, setShowTextField] = useState(false);
-
   const {
     userState: { todos },
     userDispatch,
   } = useUser();
 
   const [newTodo, setNewTodo] = useState("");
+  const [editingTodo, setEditingTodo] = useState("");
+
   return (
     <>
       <List sx={{ bgcolor: "#181818" }}>
         {todos.length > 0 ? (
-          todos.map(({ title, isDone }) => {
-            const labelId = `checkbox-list-label-${title}`;
-
+          todos.map(({ id, title, isDone, isEditing }) => {
+            const labelId = `checkbox-list-label-${id}`;
             return (
-              <ListItem key={title} disablePadding>
-                <ListItemButton
-                  role={undefined}
-                  onClick={handleToggle(title)}
-                  dense
-                  disableTouchRipple
-                >
-                  <ListItemIcon>
-                    <Checkbox
-                      sx={{
-                        color: "#fff",
-                        "&.Mui-checked": {
-                          color: "#fff",
+              <ListItem key={id} disablePadding>
+                <ListItemButton dense>
+                  {!isEditing ? (
+                    <>
+                      {" "}
+                      <ListItemIcon>
+                        <Checkbox
+                          sx={{
+                            color: "#fff",
+                            "&.Mui-checked": {
+                              color: "#fff",
+                            },
+                            "& .MuiSvgIcon-root": { fontSize: 20 },
+                          }}
+                          checked={isDone}
+                          tabIndex={-1}
+                          disableRipple
+                          inputProps={{ "aria-labelledby": labelId }}
+                          onChange={() => {
+                            const indexToUpdate = todos.findIndex(
+                              todo => todo.id === id
+                            );
+                            userDispatch({
+                              type: "UPDATE_TODO_STATUS",
+                              payload: indexToUpdate,
+                            });
+                            localStorage.setItem(
+                              "todos",
+                              JSON.stringify(
+                                todos.map((todo, index) =>
+                                  index === indexToUpdate
+                                    ? { ...todo, isDone: !todo.isDone }
+                                    : todo
+                                )
+                              )
+                            );
+                          }}
+                        />
+                      </ListItemIcon>
+                      <ListItemText
+                        id={labelId}
+                        primary={
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              fontWeight: "bold",
+                              textDecoration: isDone ? "line-through" : "none",
+                            }}
+                          >
+                            {title}
+                          </Typography>
+                        }
+                      />{" "}
+                    </>
+                  ) : (
+                    <TextField
+                      variant="filled"
+                      inputProps={{
+                        style: {
+                          height: "15px",
+                          padding: "10px",
                         },
-                        "& .MuiSvgIcon-root": { fontSize: 24 },
                       }}
-                      checked={isDone}
-                      tabIndex={-1}
-                      disableRipple
-                      inputProps={{ "aria-labelledby": labelId }}
-                      onChange={() => {
+                      sx={{
+                        bgcolor: "#333333",
+                      }}
+                      InputLabelProps={{
+                        style: { color: "#fff" },
+                      }}
+                      value={editingTodo}
+                      onChange={e => setEditingTodo(e.target.value)}
+                    />
+                  )}
+                </ListItemButton>
+                {!isEditing ? (
+                  <Box sx={{ mr: 2 }}>
+                    <IconButton
+                      edge="end"
+                      aria-label="edit"
+                      sx={{ color: "text.primary", m: 1 }}
+                      onClick={() => {
                         const indexToUpdate = todos.findIndex(
-                          todo => todo.title === title
+                          todo => todo.id === id
                         );
                         userDispatch({
-                          type: "UPDATE_TODO_STATUS",
+                          type: "UPDATE_EDITING_STATUS",
                           payload: indexToUpdate,
                         });
                         localStorage.setItem(
@@ -78,62 +124,66 @@ const TodoList = () => {
                           JSON.stringify(
                             todos.map((todo, index) =>
                               index === indexToUpdate
-                                ? { ...todo, isDone: !todo.isDone }
+                                ? { ...todo, isEditing: !todo.isEditing }
                                 : todo
                             )
                           )
                         );
+                        setEditingTodo(title);
                       }}
-                    />
-                  </ListItemIcon>
-                  <ListItemText
-                    id={labelId}
-                    primary={
-                      <Typography
-                        variant="body2"
-                        sx={{
-                          fontWeight: "bold",
-                          textDecoration: isDone ? "line-through" : "none",
-                        }}
-                      >
-                        {title}
-                      </Typography>
-                    }
-                  />
-                  {/* {showTextField && (
-                    <TextField
-                      id="standard-basic"
-                      label="Standard"
-                      variant="standard"
-                    />
-                  )} */}
-                </ListItemButton>
-                <Box sx={{ mr: 2 }}>
-                  <IconButton
-                    edge="end"
-                    aria-label="edit"
-                    sx={{ color: "text.primary" }}
-                    //   onClick={() => setShowTextField(true)}
-                  >
-                    <Icon>edit</Icon>
-                  </IconButton>
-                  <IconButton
-                    edge="end"
-                    aria-label="delete"
-                    sx={{ color: "text.primary" }}
+                    >
+                      <Icon>edit</Icon>
+                    </IconButton>
+                    <IconButton
+                      edge="end"
+                      aria-label="delete"
+                      sx={{ color: "text.primary" }}
+                      onClick={() => {
+                        userDispatch({ type: "DELETE_TODO", payload: id });
+                        localStorage.setItem(
+                          "todos",
+                          JSON.stringify(todos.filter(todo => todo.id !== id))
+                        );
+                      }}
+                    >
+                      <Icon>delete</Icon>
+                    </IconButton>
+                  </Box>
+                ) : (
+                  <Button
+                    variant="contained"
+                    color="primary"
                     onClick={() => {
-                      userDispatch({ type: "DELETE_TODO", payload: title });
+                      const indexToUpdate = todos.findIndex(
+                        todo => todo.id === id
+                      );
+                      userDispatch({
+                        type: "UPDATE_EDITING_STATUS",
+                        payload: indexToUpdate,
+                      });
+                      userDispatch({
+                        type: "UPDATE_TODO_TITLE",
+                        payload: { index: indexToUpdate, title: editingTodo },
+                      });
                       localStorage.setItem(
                         "todos",
                         JSON.stringify(
-                          todos.filter(todo => todo.title !== title)
+                          todos.map((todo, index) =>
+                            index === indexToUpdate
+                              ? {
+                                  ...todo,
+                                  title: editingTodo,
+                                  isEditing: false,
+                                }
+                              : todo
+                          )
                         )
                       );
                     }}
                   >
-                    <Icon>delete</Icon>
-                  </IconButton>
-                </Box>
+                    Update
+                  </Button>
+                )}
               </ListItem>
             );
           })
@@ -171,14 +221,23 @@ const TodoList = () => {
           color="primary"
           sx={{ m: 1 }}
           onClick={() => {
+            const todoId = uuid();
             userDispatch({
               type: "ADD_TODO",
-              payload: { title: newTodo, isDone: false },
+              payload: {
+                title: newTodo,
+                isDone: false,
+                isEditing: false,
+                id: todoId,
+              },
             });
             const oldTodos = JSON.parse(localStorage.getItem("todos")) || [];
             localStorage.setItem(
               "todos",
-              JSON.stringify([...oldTodos, { title: newTodo, isDone: false }])
+              JSON.stringify([
+                ...oldTodos,
+                { title: newTodo, isDone: false, isEditing: false, id: todoId },
+              ])
             );
             setNewTodo("");
           }}

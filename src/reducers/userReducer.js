@@ -51,7 +51,21 @@ const userReducer = (state, { type, payload }) => {
     case "DELETE_TODO":
       return {
         ...state,
-        todos: state.todos.filter(todo => todo.title !== payload),
+        todos: state.todos.filter(todo => todo.id !== payload),
+      };
+    case "UPDATE_EDITING_STATUS":
+      return {
+        ...state,
+        todos: state.todos.map((todo, index) =>
+          index === payload ? { ...todo, isEditing: !todo.isEditing } : todo
+        ),
+      };
+    case "UPDATE_TODO_TITLE":
+      return {
+        ...state,
+        todos: state.todos.map((todo, index) =>
+          index === payload.index ? { ...todo, title: payload.title } : todo
+        ),
       };
     default:
       return state;
