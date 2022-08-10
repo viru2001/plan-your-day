@@ -36,7 +36,6 @@ const TodoButton = () => {
           vertical: "bottom",
           horizontal: "right",
         }}
-        // sx={{ width: "600" }}
       >
         <TodoList />
       </Popover>
