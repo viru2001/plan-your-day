@@ -10,6 +10,7 @@ const userInitialState = {
   quote: "",
   quoteAuthor: "",
   weather: {},
+  todos: JSON.parse(localStorage.getItem("todos")) || [],
 };
 
 const userReducer = (state, { type, payload }) => {
@@ -38,6 +39,34 @@ const userReducer = (state, { type, payload }) => {
       return { ...state, quoteAuthor: payload };
     case "UPDATE_WEATHER":
       return { ...state, weather: payload };
+    case "ADD_TODO":
+      return { ...state, todos: [...state.todos, payload] };
+    case "UPDATE_TODO_STATUS":
+      return {
+        ...state,
+        todos: state.todos.map((todo, index) =>
+          index === payload ? { ...todo, isDone: !todo.isDone } : todo
+        ),
+      };
+    case "DELETE_TODO":
+      return {
+        ...state,
+        todos: state.todos.filter(todo => todo.id !== payload),
+      };
+    case "UPDATE_EDITING_STATUS":
+      return {
+        ...state,
+        todos: state.todos.map((todo, index) =>
+          index === payload ? { ...todo, isEditing: !todo.isEditing } : todo
+        ),
+      };
+    case "UPDATE_TODO_TITLE":
+      return {
+        ...state,
+        todos: state.todos.map((todo, index) =>
+          index === payload.index ? { ...todo, title: payload.title } : todo
+        ),
+      };
     default:
       return state;
   }
