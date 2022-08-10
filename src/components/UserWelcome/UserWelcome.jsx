@@ -29,7 +29,11 @@ const UserWelcome = () => {
     <Box
       sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}
     >
-      <Typography variant="h1" component="h2" sx={{ fontWeight: "bold" }}>
+      <Typography
+        variant="h1"
+        component="h1"
+        sx={{ fontWeight: "bold", fontSize: "10rem" }}
+      >
         <Moment format="HH:mm">{currentTime}</Moment>
       </Typography>
       <Box sx={{ display: "flex", alignItems: "center" }}>

@@ -26,7 +26,11 @@ const MainFocus = () => {
             alignItems: "center",
           }}
         >
-          <Typography variant="h3" component="h2" sx={{ fontWeight: "bold" }}>
+          <Typography
+            variant="h3"
+            component="h2"
+            sx={{ fontWeight: "bold", fontSize: "3rem" }}
+          >
             What is your main focus for today ?
           </Typography>
           <CssTextField
@@ -104,6 +108,7 @@ const MainFocus = () => {
                       sx={{
                         fontWeight: "bold",
                         textDecoration: isFocusDone ? "line-through" : "None",
+                        fontSize: "3rem",
                       }}
                     >
                       {focus}
