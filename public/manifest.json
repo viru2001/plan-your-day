@@ -1,6 +1,6 @@
 {
   "short_name": "Plan Your Day",
-  "manifest_version": 3,
+  "manifest_version": 2,
   "version": "1.0.1",
   "name": "Plan Your Day",
   "chrome_url_overrides": {
