@@ -13,7 +13,13 @@
 - Todo List 
 
 ---
+## API's used : 
+- [Open Weather](https://openweathermap.org/api)
+- [Unsplash](https://unsplash.com/developers)
 
 ## Tech stack 
 
 - Frontend : React Js, Material UI
+
+
+[Visit Site](https://plan-your-day-viresh.netlify.app/)
